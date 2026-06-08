@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import os
 import streamlit as st
 from ultralytics import YOLO
 from PIL import Image
@@ -15,7 +16,8 @@ st.write("Upload an image to detect passenger sheds, seating, signs, and other e
 # Make sure 'best.pt' is in the 'weights' folder
 @st.cache_resource
 def load_model():
-    model_path = '../weights/best.pt'
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    model_path = os.path.join(base_dir, 'weights', 'best.pt')
     return YOLO(model_path)
 
 try:

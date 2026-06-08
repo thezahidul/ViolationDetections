@@ -10,7 +10,8 @@ app = FastAPI(
 )
 
 # Relative path navigation from src/api/ to weights/best.pt
-MODEL_PATH = os.path.join("..", "..", "weights", "best.pt")
+api_dir = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.abspath(os.path.join(api_dir, "..", "..", "weights", "best.pt"))
 
 if not os.path.exists(MODEL_PATH):
     print(f"[Warning] YOLOv11 weight file not found at: {MODEL_PATH}. Please check folder paths.")

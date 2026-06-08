@@ -33,9 +33,10 @@ def run_detection(model_path, source_path, conf_threshold=0.25):
 if __name__ == "__main__":
     # Path configuration
     # Ensure your weights are in the 'weights' folder and images are in the 'data' folder
-    BEST_MODEL = 'weights/best.pt'
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    BEST_MODEL = os.path.join(base_dir, 'weights', 'best.pt')
 
     # Passing the folder path instead of a single image file to process everything auto
-    TEST_SOURCE = 'data'
+    TEST_SOURCE = os.path.join(base_dir, 'data')
 
     run_detection(BEST_MODEL, TEST_SOURCE)
