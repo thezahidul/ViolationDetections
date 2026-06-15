@@ -1,15 +1,19 @@
 # Bus Stoppage Violation Detection System
 
-This repository contains the implementation of an automated system designed to detect bus stoppage violations using the **YOLOv11** object detection model. This project is part of my final year thesis.
+This repository contains the implementation of an automated, real-time traffic enforcement system designed to detect illegal bus stoppage behavior using a **Dual-Model YOLOv11 Ensemble Architecture** and multi-view vision sensors. This project is developed as part of my final year thesis at Dhaka International University.
 
 ---
 
 ## 📌 Project Overview
-The primary goal of this project is to identify whether a bus is stopping within the designated legal boundary or violating traffic rules by stopping elsewhere. The system processes images/videos from both CCTV and bus-mounted cameras.
+The primary goal of this system is to evaluate whether a transit vehicle is stopping within legally designated commuter boundaries (passenger shelters/signs) or violating urban traffic regulations by stopping elsewhere. 
 
-- **Model:** YOLOv11 (Ultralytics)
-- **Primary Classes:** Bus, Bus Stop, Shelter, Seating, Trash Can.
-- **Input:** Images and Video Streams.
+To eliminate false-positive citations caused by typical Dhaka City gridlocks, the system deploys a **hybrid intelligent decision network** processing synchronized telemetry parameters (speed) along with front and rear optical streams.
+
+### 🚀 Key Architectural Upgrades
+- **Dual-Model Ensemble Core:** Uses a custom-trained YOLOv11 model (`best.pt`) specialized in urban infrastructure detection alongside a state-of-the-art pre-trained YOLOv11 model (`yolo11n.pt`) as a dedicated congestion filter.
+- **Multi-View Optical Ingestion:** Simultaneously processes front-facing and rear-facing vehicle-mounted camera frames to maintain high context availability.
+
+---
 
 # 🖥️ Local Model Testing via Web Interface
 
@@ -85,7 +89,7 @@ This module allows developers, IoT edge devices (like Jetson Nano), or external 
 
 Expected terminal output confirmation:
 
-INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Uvicorn running on http://127.0.0.1:8000/docs (Press CTRL+C to quit)
     
 ## 📊 Dataset & Results
 #### 📂 Dataset (1,100+ Images)
