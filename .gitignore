@@ -20,3 +20,8 @@ datasets/
 # OS specific
 .DS_Store
 Thumbs.db
+.agent/skills/ui-ux-pro-max/*
+
+# Database and uploaded evidence images
+*.db
+illegal-bus-stoppage-detection/uploads/
