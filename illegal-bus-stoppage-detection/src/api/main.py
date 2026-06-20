@@ -121,6 +121,8 @@ async def predict_and_check_violation(
         has_legal_infrastructure_front = False
         has_legal_infrastructure_rear = False
         traffic_congestion_detected = False
+        front_vehicle_detected = False
+        rear_vehicle_detected = False
 
         # MS COCO standard class indices for common transit entities
         COCO_VEHICLE_CLASSES = ["car", "motorcycle", "bus", "truck"]
@@ -151,8 +153,14 @@ async def predict_and_check_violation(
             for r in veh_res_front:
                 for box in r.boxes:
                     c_name = vehicle_model.names[int(box.cls)]
+                    logger.info(f"Front lens detected vehicle class: {c_name} with confidence {float(box.conf):.2f}")
                     if c_name in COCO_VEHICLE_CLASSES:
-                        traffic_congestion_detected = True
+                        # Filter out small background/parked vehicles (relative area < 2% of frame or confidence < 0.45)
+                        xmin, ymin, xmax, ymax = box.xyxy[0].tolist()
+                        h, w = r.orig_shape
+                        rel_area = ((xmax - xmin) * (ymax - ymin)) / (w * h)
+                        if float(box.conf) >= 0.45 and rel_area >= 0.02:
+                            front_vehicle_detected = True
 
         # 3. Synchronous Parsing: Rear Lens Node
         if rear_camera_active and rear_path:
@@ -180,8 +188,16 @@ async def predict_and_check_violation(
             for r in veh_res_rear:
                 for box in r.boxes:
                     c_name = vehicle_model.names[int(box.cls)]
+                    logger.info(f"Rear lens detected vehicle class: {c_name} with confidence {float(box.conf):.2f}")
                     if c_name in COCO_VEHICLE_CLASSES:
-                        traffic_congestion_detected = True
+                        # Filter out small background/parked vehicles (relative area < 2% of frame or confidence < 0.45)
+                        xmin, ymin, xmax, ymax = box.xyxy[0].tolist()
+                        h, w = r.orig_shape
+                        rel_area = ((xmax - xmin) * (ymax - ymin)) / (w * h)
+                        if float(box.conf) >= 0.45 and rel_area >= 0.02:
+                            rear_vehicle_detected = True
+
+        traffic_congestion_detected = front_vehicle_detected or rear_vehicle_detected
 
         # 4. Hybrid Intelligent Decision Framework
         violation_detected = False
@@ -227,7 +243,9 @@ async def predict_and_check_violation(
             infrastructure_verified_rear=has_legal_infrastructure_rear,
             detections_json=json.dumps({
                 "front": front_infra_detections,
-                "rear": rear_infra_detections
+                "rear": rear_infra_detections,
+                "front_vehicle_detected": front_vehicle_detected,
+                "rear_vehicle_detected": rear_vehicle_detected
             }),
             status="Pending Review" if violation_detected else "Compliant"
         )
@@ -247,7 +265,9 @@ async def predict_and_check_violation(
             "timestamp": incident.timestamp,
             "bus_speed_kmh": speed,
             "congestion_status": {
-                "traffic_congestion_detected": traffic_congestion_detected
+                "traffic_congestion_detected": traffic_congestion_detected,
+                "front_congestion_detected": front_vehicle_detected,
+                "rear_congestion_detected": rear_vehicle_detected
             },
             "multi_view_context": {
                 "front_infrastructure_verified": has_legal_infrastructure_front,
@@ -288,7 +308,9 @@ async def get_all_incidents(db: Session = Depends(get_db)):
             "timestamp": inc.timestamp,
             "bus_speed_kmh": inc.speed,
             "congestion_status": {
-                "traffic_congestion_detected": inc.traffic_congestion_detected
+                "traffic_congestion_detected": inc.traffic_congestion_detected,
+                "front_congestion_detected": detections.get("front_vehicle_detected", inc.traffic_congestion_detected),
+                "rear_congestion_detected": detections.get("rear_vehicle_detected", inc.traffic_congestion_detected)
             },
             "multi_view_context": {
                 "front_infrastructure_verified": inc.infrastructure_verified_front,

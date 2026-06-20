@@ -250,6 +250,8 @@ export default function App() {
           frontDetections={frontDetections}
           rearDetections={rearDetections}
           hasRun={hasRun}
+          frontCongestionDetected={incident?.congestion_status?.front_congestion_detected || false}
+          rearCongestionDetected={incident?.congestion_status?.rear_congestion_detected || false}
         />
 
         {/* Lower Dashboard: Traffic Analytics context & Enforcement Decision Banner */}

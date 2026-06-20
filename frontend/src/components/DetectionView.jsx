@@ -9,6 +9,8 @@ export default function DetectionView({
   frontDetections,
   rearDetections,
   hasRun,
+  frontCongestionDetected,
+  rearCongestionDetected,
 }) {
   const frontCanvasRef = useRef(null);
   const rearCanvasRef = useRef(null);
@@ -161,6 +163,16 @@ export default function DetectionView({
           )}
         </div>
 
+        {/* Vehicle Detection Info */}
+        {hasRun && frontSrc && frontCongestionDetected && (
+          <div className="mt-4 p-3.5 bg-amber-500/10 border border-amber-500/20 rounded-xl flex flex-col gap-1 text-left">
+            <div className="flex items-center gap-2 text-amber-400 font-mono text-xs font-bold uppercase tracking-wider">
+              <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+              ⚠️ Vehicle detected
+            </div>
+          </div>
+        )}
+
         {/* Detections Summary */}
         {hasRun && frontSrc && (
           <div className="mt-4 pt-4 border-t border-slate-800/60">
@@ -221,6 +233,16 @@ export default function DetectionView({
             </div>
           )}
         </div>
+
+        {/* Vehicle Detection Info */}
+        {hasRun && rearSrc && rearCongestionDetected && (
+          <div className="mt-4 p-3.5 bg-amber-500/10 border border-amber-500/20 rounded-xl flex flex-col gap-1 text-left">
+            <div className="flex items-center gap-2 text-amber-400 font-mono text-xs font-bold uppercase tracking-wider">
+              <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+              ⚠️ Vehicle detected
+            </div>
+          </div>
+        )}
 
         {/* Detections Summary */}
         {hasRun && rearSrc && (
