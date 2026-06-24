@@ -10,15 +10,19 @@ import numpy as np
 st.set_page_config(page_title="Passenger Shed Detection System", layout="wide")
 
 st.title("🚌 Urban Infrastructure & Passenger Shed Detection")
-st.write("Upload an image to detect passenger sheds, seating, signs, and other elements using our YOLOv11 model.")
+st.write(
+    "Upload an image to detect passenger sheds, seating, signs, and other elements using our YOLOv11 model."
+)
+
 
 # Load the trained model
 # Make sure 'best.pt' is in the 'weights' folder
 @st.cache_resource
 def load_model():
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    model_path = os.path.join(base_dir, 'weights', 'best.pt')
+    model_path = os.path.join(base_dir, "weights", "best.pt")
     return YOLO(model_path)
+
 
 try:
     model = load_model()
@@ -40,8 +44,8 @@ if uploaded_file is not None:
         st.image(image, use_container_width=True)
 
     # Run Detection
-    if st.button('Perform Detection'):
-        with st.spinner('Detecting objects...'):
+    if st.button("Perform Detection"):
+        with st.spinner("Detecting objects..."):
             results = model.predict(source=image, conf=0.25)
 
             # Plot results on the image
@@ -64,4 +68,6 @@ if uploaded_file is not None:
 
 # Footer
 st.markdown("---")
-st.markdown("Developed by **Zahidul Islam and My team members** | Dhaka International University")
+st.markdown(
+    "Developed by **Zahidul Islam and My team members** | Dhaka International University"
+)
