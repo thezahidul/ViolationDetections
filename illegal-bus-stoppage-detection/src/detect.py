@@ -22,9 +22,9 @@ def run_detection(model_path, source_path, conf_threshold=0.25):
         source=source_path,
         conf=conf_threshold,
         save=True,
-        project='inference_results',
-        name='detections',
-        exist_ok=True  # Overwrites the folder instead of creating detections2, detections3...
+        project="inference_results",
+        name="detections",
+        exist_ok=True,  # Overwrites the folder instead of creating detections2, detections3...
     )
 
     print(f"Detection completed! Results saved in: inference_results/detections")
@@ -34,9 +34,9 @@ if __name__ == "__main__":
     # Path configuration
     # Ensure your weights are in the 'weights' folder and images are in the 'data' folder
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    BEST_MODEL = os.path.join(base_dir, 'weights', 'best.pt')
+    BEST_MODEL = os.path.join(base_dir, "weights", "best.pt")
 
     # Passing the folder path instead of a single image file to process everything auto
-    TEST_SOURCE = os.path.join(base_dir, 'data')
+    TEST_SOURCE = os.path.join(base_dir, "data")
 
     run_detection(BEST_MODEL, TEST_SOURCE)
