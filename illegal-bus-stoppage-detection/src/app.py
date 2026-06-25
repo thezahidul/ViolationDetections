@@ -21,12 +21,10 @@ def load_models():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(current_dir)
 
-    # ৩টি মডেলের পাথ
     shelter_path = os.path.join(project_root, "weights", "shelter_model.pt")
     sign_path = os.path.join(project_root, "weights", "ultimate_bus_stop_model.pt")
     vehicle_path = os.path.join(project_root, "weights", "vehicle_detector.pt")
 
-    # ৩টি মডেল মেমোরিতে লোড করা
     s_model = YOLO(shelter_path)
     sign_m = YOLO(sign_path)
     v_model = YOLO(vehicle_path)
@@ -59,15 +57,15 @@ if uploaded_file is not None:
     if st.button("Run Enforcement Verification"):
         with st.spinner("Processing Multi-Model Pipeline..."):
 
-            # 1. Inference (৩টি মডেল দিয়ে আলাদাভাবে ডিটেকশন)
+            # 1. Inference (Detection using 3 models separately)
             res_shelter = shelter_model.predict(source=image, conf=0.25, verbose=False)
             res_sign = sign_model.predict(source=image, conf=0.25, verbose=False)
-            # COCO Vehicle classes: 2=car, 3=motorcycle, 5=bus, 7=truck (দূরের গাড়ির জন্য conf 0.15)
+            # COCO Vehicle classes: 2=car, 3=motorcycle, 5=bus, 7=truck (Distance vehicles)
             res_vehicle = vehicle_model.predict(
                 source=image, conf=0.15, classes=[2, 3, 5, 7], verbose=False
             )
 
-            # 2. Merge Bounding Boxes (৩টি মডেলের বাউন্ডিং বক্স একটি ইমেজে বসানো)
+            # 2. Merge Bounding Boxes (Detection boxes from all 3 models on a single image)
             plotted_img = res_shelter[0].plot()
             plotted_img = res_sign[0].plot(img=plotted_img)
             plotted_img = res_vehicle[0].plot(img=plotted_img)
@@ -83,7 +81,7 @@ if uploaded_file is not None:
             st.markdown("---")
             st.subheader("📋 Enforcement System Summary:")
 
-            # যদি শেড অথবা সাইন যেকোনো একটি পাওয়া যায়, তাহলেই কমপ্লায়েন্ট
+            # If either shade or sign is found, then it is compliant.
             infra_found = len(res_shelter[0].boxes) > 0 or len(res_sign[0].boxes) > 0
 
             if infra_found:
@@ -95,7 +93,7 @@ if uploaded_file is not None:
                     "🚨 **STATUS: VIOLATION GENERATED** — No Bus Shed, Seating, or Signpost detected."
                 )
 
-            # বিস্তারিত ড্যাশবোর্ড ডাটা
+            # Detailed Dashboard Data
             col_inf, col_veh = st.columns(2)
 
             with col_inf:
