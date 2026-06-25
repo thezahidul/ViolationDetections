@@ -9,23 +9,14 @@ import numpy as np
 # Page Configuration
 st.set_page_config(page_title="Intelligent Bus Stop Enforcement System", layout="wide")
 
-<<<<<<< HEAD
 st.title("🚌 Urban Infrastructure & Bus Stop Enforcement Pipeline")
 st.write(
     "Upload an image to detect infrastructure (Sheds, Signs) and Traffic elements."
 )
-=======
-st.title("🚌 Urban Infrastructure & Passenger Shed Detection")
-st.write(
-    "Upload an image to detect passenger sheds, seating, signs, and other elements using our YOLOv11 model."
-)
-
->>>>>>> e5a9bef9eef33c61d0a28c1f82d53cde33cb7373
 
 
 # Load the models using cache so they only load once
 @st.cache_resource
-<<<<<<< HEAD
 def load_models():
     current_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(current_dir)
@@ -41,13 +32,6 @@ def load_models():
     v_model = YOLO(vehicle_path)
 
     return s_model, sign_m, v_model
-
-=======
-def load_model():
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    model_path = os.path.join(base_dir, "weights", "best.pt")
-    return YOLO(model_path)
->>>>>>> e5a9bef9eef33c61d0a28c1f82d53cde33cb7373
 
 
 try:
@@ -71,16 +55,9 @@ if uploaded_file is not None:
         st.subheader("Source Frame")
         st.image(image, use_container_width=True)
 
-<<<<<<< HEAD
     # Run Detection Pipeline
     if st.button("Run Enforcement Verification"):
         with st.spinner("Processing Multi-Model Pipeline..."):
-=======
-    # Run Detection
-    if st.button("Perform Detection"):
-        with st.spinner("Detecting objects..."):
-            results = model.predict(source=image, conf=0.25)
->>>>>>> e5a9bef9eef33c61d0a28c1f82d53cde33cb7373
 
             # 1. Inference (৩টি মডেল দিয়ে আলাদাভাবে ডিটেকশন)
             res_shelter = shelter_model.predict(source=image, conf=0.25, verbose=False)
@@ -118,7 +95,6 @@ if uploaded_file is not None:
                     "🚨 **STATUS: VIOLATION GENERATED** — No Bus Shed, Seating, or Signpost detected."
                 )
 
-<<<<<<< HEAD
             # বিস্তারিত ড্যাশবোর্ড ডাটা
             col_inf, col_veh = st.columns(2)
 
@@ -151,10 +127,3 @@ if uploaded_file is not None:
                         )
                 else:
                     st.caption("No target vehicles detected.")
-=======
-# Footer
-st.markdown("---")
-st.markdown(
-    "Developed by **Zahidul Islam and My team members** | Dhaka International University"
-)
->>>>>>> e5a9bef9eef33c61d0a28c1f82d53cde33cb7373
