@@ -41,11 +41,24 @@ def main():
 
     print(f"📷 Processing image: {args.source}")
 
+<<<<<<< HEAD
     # 1. Inference (৩টি মডেল দিয়ে ডিটেকশন)
     res_shelter = shelter_model.predict(source=args.source, conf=0.25, verbose=False)
     res_sign = sign_model.predict(source=args.source, conf=0.25, verbose=False)
     res_vehicle = vehicle_model.predict(
         source=args.source, conf=0.15, classes=[2, 3, 5, 7], verbose=False
+=======
+    # 3. Run prediction
+    # If source_path is a folder, YOLO will automatically process all images in it
+    print(f"Running detection on: {source_path}")
+    results = model.predict(
+        source=source_path,
+        conf=conf_threshold,
+        save=True,
+        project="inference_results",
+        name="detections",
+        exist_ok=True,  # Overwrites the folder instead of creating detections2, detections3...
+>>>>>>> e5a9bef9eef33c61d0a28c1f82d53cde33cb7373
     )
 
     # 2. Merge Bounding Boxes (একটি ছবিতে সব বক্স আঁকা)
@@ -74,4 +87,16 @@ def main():
 
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     main()
+=======
+    # Path configuration
+    # Ensure your weights are in the 'weights' folder and images are in the 'data' folder
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    BEST_MODEL = os.path.join(base_dir, "weights", "best.pt")
+
+    # Passing the folder path instead of a single image file to process everything auto
+    TEST_SOURCE = os.path.join(base_dir, "data")
+
+    run_detection(BEST_MODEL, TEST_SOURCE)
+>>>>>>> e5a9bef9eef33c61d0a28c1f82d53cde33cb7373
