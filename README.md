@@ -111,3 +111,14 @@ https://drive.google.com/drive/folders/1RBBKi4eG7KyfznEFwtxqylLeHqDB9xKi?usp=sha
 
 **Coordinate Analysis:** If the bounding box of the 'Bus' remains stationary for a specific duration outside the designated 'Bus Stop' coordinates, a Violation is triggered and logged automatically.
 
+## References & Acknowledgments
+
+This project utilizes multi-model AI architectures for robust urban infrastructure and traffic enforcement tracking. The following models and frameworks are referenced and integrated into the pipeline:
+
+### 1. Vehicle Detection Model
+* **Model Framework:** YOLOv11 (Nano Variant)
+* **Pre-trained Weights:** `yolo11n.pt`
+* **Dataset Target:** COCO Dataset (specifically filtering classes: `car`, `motorcycle`, `bus`, `truck`)
+* **Developer/Maintainer:** Ultralytics Inc.
+* **Official Repository:** [Ultralytics GitHub - YOLO11](https://github.com/ultralytics/ultralytics)
+

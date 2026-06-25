@@ -7,7 +7,7 @@ from ultralytics import YOLO
 
 
 def main():
-    # টার্মিনাল থেকে ইনপুট নেওয়ার জন্য আর্গুমেন্ট পার্সার
+    # Terminal argument parser for input
     parser = argparse.ArgumentParser(
         description="Multi-Model Bus Stop & Traffic Detection"
     )
@@ -22,7 +22,7 @@ def main():
     )
     args = parser.parse_args()
 
-    # মডেলের পাথ সেট করা
+    # Set the paths for the models
     current_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.dirname(current_dir)
 
@@ -41,14 +41,14 @@ def main():
 
     print(f"📷 Processing image: {args.source}")
 
-    # 1. Inference (৩টি মডেল দিয়ে ডিটেকশন)
+    # 1. Inference (Detection using 3 models separately)
     res_shelter = shelter_model.predict(source=args.source, conf=0.25, verbose=False)
     res_sign = sign_model.predict(source=args.source, conf=0.25, verbose=False)
     res_vehicle = vehicle_model.predict(
         source=args.source, conf=0.15, classes=[2, 3, 5, 7], verbose=False
     )
 
-    # 2. Merge Bounding Boxes (একটি ছবিতে সব বক্স আঁকা)
+    # 2. Merge Bounding Boxes (Detection boxes from all 3 models on a single image)
     plotted_img = res_shelter[0].plot()
     plotted_img = res_sign[0].plot(img=plotted_img)
     plotted_img = res_vehicle[0].plot(img=plotted_img)

@@ -43,10 +43,10 @@ UPLOADS_DIR = os.path.join(BASE_DIR, "uploads")
 os.makedirs(UPLOADS_DIR, exist_ok=True)
 
 try:
-    # আমাদের কাস্টম ২টি মডেল লোকাল ফোল্ডার থেকে লোড হবে
+    # Our custom 2 models will be loaded from the local folder.
     shelter_model = YOLO(SHELTER_MODEL_PATH)
     sign_model = YOLO(SIGN_MODEL_PATH)
-    # গাড়ির মডেলটি সরাসরি অফিশিয়াল ওয়েইট থেকে লোড হবে (যাতে কোনো এরর না আসে)
+    # The vehicle model will be loaded directly from the official weights (to avoid any errors)
     vehicle_model = YOLO("yolo11n.pt")
     logger.info("All 3 AI Models loaded successfully into system memory.")
 except Exception as e:
@@ -67,7 +67,7 @@ async def predict_and_check_violation(
     front_image, rear_image = None, None
     front_camera_active, rear_camera_active = False, False
 
-    # 1. ইন-মেমোরি ইমেজ লোডিং (ফাইল করাপশন রোধ করতে)
+    # 1. In-Memory Image Loading (To prevent file corruption)
     if front_file and front_file.filename != "":
         contents = await front_file.read()
         front_image = Image.open(io.BytesIO(contents)).convert("RGB")
